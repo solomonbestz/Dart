@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import '../main.dart';
 import 'levels.dart';
 
 String prompt(String message) {
@@ -29,25 +30,59 @@ String start(String player) {
   return start.toLowerCase();
 }
 
-T generate_random<T>(List<dynamic> my_list) {
+T generate_random<T>(List my_list) {
   Random random = new Random();
   int rand = random.nextInt(my_list.length);
   return my_list[rand];
 }
 
-void display_word() {
-  List<String> char = [];
-  List<dynamic> level1 = level_one();
+List display_word() {
+  List words = [];
+  List level1 = level_one();
   String word = generate_random(level1);
-  print(word);
+
+  for (int i = 0; i < word.length; i++) {
+    words.add(word);
+    words[i] = word[i];
+  }
+  return words;
+}
+
+void end_game(int number_of_guesses_limit) {
+  if (number_of_guesses_limit < 0) {
+    print("Game Over!!, You have been hanged");
+    exit(0);
+  }
+}
+
+void game() {
+  int number_of_guesses = 6;
+  List char = [];
+  List word = display_word();
   for (int i = 0; i < word.length; i++) {
     char.add(word);
     char[i] = "*";
   }
-  print("Guess The Word: ${char}");
-}
+  print(word);
+  while (true) {
+    print("Guess The Word: ${char}");
+    String guess_character = prompt("Enter Character: ");
+    if (word.contains(guess_character)) {
+      ;
+      for (int i = 0; i < word.length; i++) {
+        if (word[i] == guess_character) {
+          char[i] = guess_character;
+        }
+      }
+    } else {
+      print("You have $number_of_guesses guess(s) left.");
+      number_of_guesses = number_of_guesses - 1;
+      end_game(number_of_guesses);
+    }
 
-void game() {}
+    print("Guessed Character: ${char}");
+  }
+}
 
 void main() {
   instructions();
@@ -55,7 +90,7 @@ void main() {
   String start_game = start(player_name);
 
   if (start_game == "yes") {
-    display_word();
+    game();
   } else {
     print("There is a bug somewhere");
   }
