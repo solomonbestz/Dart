@@ -49,9 +49,19 @@ List display_word() {
 }
 
 void end_game(int number_of_guesses_limit) {
+  List hints = ["First", "Second", "Third"];
   if (number_of_guesses_limit < 0) {
     print("Game Over!!, You have been hanged");
     exit(0);
+  }
+  if (number_of_guesses_limit == 5) {
+    print("${hints[0]} hint: ${level_one_hints()[0]}");
+  }
+  if (number_of_guesses_limit == 3) {
+    print("${hints[1]} hint: ${level_one_hints()[1]}");
+  }
+  if (number_of_guesses_limit == 2) {
+    print("${hints[2]} hint: ${level_one_hints()[2]}");
   }
 }
 
@@ -65,8 +75,12 @@ void game() {
   }
   print(word);
   while (true) {
-    print("Guess The Word: ${char}");
-    String guess_character = prompt("Enter Character: ");
+    print("""
+         Guess The Hidden Word: ${char}
+    """);
+    String guess_character = prompt("""
+         Enter The Missing Character: 
+    """);
     if (word.contains(guess_character)) {
       ;
       for (int i = 0; i < word.length; i++) {
@@ -75,18 +89,23 @@ void game() {
         }
       }
     } else {
+      print("");
       print("You have $number_of_guesses guess(s) left.");
       number_of_guesses = number_of_guesses - 1;
       end_game(number_of_guesses);
     }
-
-    print("Guessed Character: ${char}");
+    print("");
+    print("""
+         Correct Character:             ${char}
+    """);
   }
 }
 
 void main() {
   instructions();
-  String player_name = player("Enter Player Name: ");
+  String player_name = player("""
+     Enter Player Name: 
+     """);
   String start_game = start(player_name);
 
   if (start_game == "yes") {
